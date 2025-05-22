@@ -1,0 +1,45 @@
+# Build artifacts and generated files
+*.d
+*.o
+*.eep
+*.srec
+*.elf
+*.hex
+*.bin
+*.lss
+*.map
+*.clang-format
+
+# Build directories
+build/
+Debug/
+Release/
+.cache/
+.vs/PIcon/v14/.atsuo
+
+# Compiled object files and precompiled headers
+*.obj
+*.gch
+*.pch
+
+# Compiled dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Executables
+*.exe
+*.out
+*.app
+
+# Debug files
+*.dSYM/
+*.stackdump
+
+# Logs and temporary files
+*.log
+*.tmp
+
+# Other folders
+.vscode/
+.idea/
