@@ -52,7 +52,7 @@ SPI_HandleTypeDef hspi1;
 osThreadId_t defaultTaskHandle;
 const osThreadAttr_t defaultTask_attributes = {
   .name = "defaultTask",
-  .stack_size = 128 * 4,
+  .stack_size = 512 * 4,
   .priority = (osPriority_t) osPriorityNormal,
 };
 /* Definitions for HeartBeatTask */
@@ -117,7 +117,7 @@ int main(void)
   MX_I2S3_Init();
   MX_SPI1_Init();
   /* USER CODE BEGIN 2 */
-
+  //MX_USB_HOST_Init();
   /* USER CODE END 2 */
 
   /* Init scheduler */
@@ -432,7 +432,7 @@ static void MX_GPIO_Init(void)
 void StartDefaultTask(void *argument)
 {
   /* init code for USB_HOST */
-  MX_USB_HOST_Init();
+  //MX_USB_HOST_Init();
   /* USER CODE BEGIN 5 */
 
   /* Infinite loop */
