@@ -18,7 +18,7 @@
 //It uses a _variable length argument_, same as normal printf
 //Indeed, just call this function as if it was printf, and you'll get the behaviour you expect
 //I also like doing it this way since I can change the definition of the function as needed
-void debug_printf(const char *fmt, ...);
+void DebugPrintfItm(const char *fmt, ...);
 
 
 

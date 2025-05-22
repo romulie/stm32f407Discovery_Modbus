@@ -28,11 +28,10 @@ extern "C" {
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f4xx_hal.h"
-#include "debug_printf.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "debug_printf.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -126,6 +125,8 @@ void Error_Handler(void);
 #define MEMS_INT2_GPIO_Port GPIOE
 
 /* USER CODE BEGIN Private defines */
+#define DEFAULT_TASK_PERIOD_MS		(1000u)
+#define HEART_BEAT_PERIOD_MS		(100u)
 
 /* USER CODE END Private defines */
 
