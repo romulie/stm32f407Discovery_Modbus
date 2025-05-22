@@ -117,6 +117,7 @@ int main(void)
     counter++;
     HAL_Delay(500);
     ITM_SendChar('!');
+    debug_printf("counter = %ul\r\n", counter);
   }
   /* USER CODE END 3 */
 }
