@@ -65,7 +65,7 @@ void MX_USB_HOST_Process(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+uint32_t counter = 0;
 /* USER CODE END 0 */
 
 /**
@@ -114,7 +114,9 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
     HAL_GPIO_TogglePin(LD5_GPIO_Port, LD5_Pin);
+    counter++;
     HAL_Delay(500);
+    ITM_SendChar('!');
   }
   /* USER CODE END 3 */
 }
