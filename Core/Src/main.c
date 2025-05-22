@@ -116,8 +116,8 @@ int main(void)
     HAL_GPIO_TogglePin(LD5_GPIO_Port, LD5_Pin);
     counter++;
     HAL_Delay(500);
-    ITM_SendChar('!');
-    debug_printf("counter = %ul\r\n", counter);
+    //ITM_SendChar('!');
+    debug_printf("counter = %lu\r\n", counter);
   }
   /* USER CODE END 3 */
 }
