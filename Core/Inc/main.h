@@ -37,7 +37,7 @@ extern "C" {
 #include "Modbus.h"
 extern modbusHandler_t ModbusH;
 extern uint16_t ModbusDATARX[8];
-extern uint16_t ModbusDATATX[8];
+//extern uint16_t ModbusDATATX[8];
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/

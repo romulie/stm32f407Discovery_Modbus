@@ -68,7 +68,7 @@ const osThreadAttr_t HeartBeatTask_attributes = {
 
 modbusHandler_t ModbusH;
 uint16_t ModbusDATARX[8];
-uint16_t ModbusDATATX[8];
+//uint16_t ModbusDATATX[8];
 
 /* USER CODE END PV */
 
@@ -507,6 +507,17 @@ void defaultTaskWorker(void *argument)
 	  //const uint8_t message[] = "Hello UART2!\r\n";
 	  //uint16_t msgSize = strlen((char *)message);
 	  //HAL_UART_Transmit(&huart2, message, msgSize, 100);
+
+	  // check if COIL 0 is set
+	  if(ModbusDATARX[0] & 0x01)
+	  {
+		  HAL_GPIO_WritePin(LD6_GPIO_Port, LD6_Pin, GPIO_PIN_SET);
+	  }
+	  else
+	  {
+		  HAL_GPIO_WritePin(LD6_GPIO_Port, LD6_Pin, GPIO_PIN_RESET);
+	  }
+
 
 	  osDelay(DEFAULT_TASK_PERIOD_MS);
   }
