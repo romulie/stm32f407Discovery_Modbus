@@ -33,6 +33,11 @@ extern "C" {
 /* USER CODE BEGIN Includes */
 #include "debug_printf.h"
 #include <string.h>
+
+#include "Modbus.h"
+extern modbusHandler_t ModbusH;
+extern uint16_t ModbusDATARX[8];
+extern uint16_t ModbusDATATX[8];
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/

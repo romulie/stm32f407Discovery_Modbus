@@ -66,6 +66,10 @@ const osThreadAttr_t HeartBeatTask_attributes = {
 };
 /* USER CODE BEGIN PV */
 
+modbusHandler_t ModbusH;
+uint16_t ModbusDATARX[8];
+uint16_t ModbusDATATX[8];
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -122,6 +126,23 @@ int main(void)
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
 
+  /* Modbus Slave initialization */
+	ModbusH.uModbusType = MB_SLAVE; // or use MB_MASTER
+	ModbusH.port 		= &huart2; 	// This is the UART port connected to FTDI on ShieldBoard
+	ModbusH.u8id 		= 1; 		// Slave ID
+	ModbusH.u16timeOut 	= 1000;		// for Master only??
+	ModbusH.EN_Port 	= NULL; 	// No RS485
+    //ModbusH2.EN_Port = LD2_GPIO_Port; 	// RS485 Enable
+    //ModbusH2.EN_Pin = LD2_Pin; 			// RS485 Enable
+    ModbusH.u16regs = ModbusDATARX;
+    ModbusH.u16regsize= sizeof(ModbusDATARX)/sizeof(ModbusDATARX[0]);
+    ModbusH.xTypeHW = USART_HW;
+     //Initialize Modbus library
+    DEBUG_PRINT("Going to start ModbusInit...");
+    ModbusInit(&ModbusH);
+    //Start capturing traffic on serial Port
+    DEBUG_PRINT("Going to capture traffic on serial port...");
+    ModbusStart(&ModbusH);
   /* USER CODE END 2 */
 
   /* Init scheduler */
@@ -479,9 +500,9 @@ void defaultTaskWorker(void *argument)
 
 	  Counter++;
 
-	  DebugPrintfItm("counter = %lu\r\n", Counter);
-	  printf("PRINTF counter = %lu\r\n", Counter);
-	  DEBUG_PRINT("DEBUG PRINTF counter = %lu\r\n", Counter);
+	  DebugPrintfItm("counter = %lu\r\n", Counter); // visible in Debug session only via SWO
+	  //printf("PRINTF counter = %lu\r\n", Counter);
+	  //DEBUG_PRINT("DEBUG PRINTF counter = %lu\r\n", Counter);
 
 	  //const uint8_t message[] = "Hello UART2!\r\n";
 	  //uint16_t msgSize = strlen((char *)message);
