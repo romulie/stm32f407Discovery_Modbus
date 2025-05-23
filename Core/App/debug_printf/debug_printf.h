@@ -12,7 +12,15 @@
 #include <stdio.h>
 #include <stdarg.h>
 
-#define DEBUGPRINTF_BUF_LEN		(256u)
+#define DEBUG_PRINTF_BUF_LEN		(256u)
+#define	UART_HANDLE					(huart2)
+
+#ifdef DEBUG
+	#define DEBUG_PRINT(fmt, ...)               printf("[DEBUG] %s:%d: " fmt "\r\n", __FILE__, __LINE__, ##__VA_ARGS__)
+#else
+	#define DEBUG_PRINT(fmt, ...)
+#endif
+
 
 //debug_printf sends a max of 256 characters to the ITM SWO trace debugger
 //It uses a _variable length argument_, same as normal printf

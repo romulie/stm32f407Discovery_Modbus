@@ -481,11 +481,11 @@ void defaultTaskWorker(void *argument)
 
 	  DebugPrintfItm("counter = %lu\r\n", Counter);
 	  printf("PRINTF counter = %lu\r\n", Counter);
+	  DEBUG_PRINT("DEBUG PRINTF counter = %lu\r\n", Counter);
 
-	  const uint8_t message[] = "Hello UART2!\r\n";
-	  uint16_t msgSize = strlen((char *)message);
-
-	  HAL_UART_Transmit(&huart2, message, msgSize, 100);
+	  //const uint8_t message[] = "Hello UART2!\r\n";
+	  //uint16_t msgSize = strlen((char *)message);
+	  //HAL_UART_Transmit(&huart2, message, msgSize, 100);
 
 	  osDelay(DEFAULT_TASK_PERIOD_MS);
   }
@@ -505,7 +505,8 @@ void heartBeatTaskWorker(void *argument)
   /* Infinite loop */
   for(;;)
   {
-    osDelay(1);
+	  HAL_GPIO_TogglePin(LD5_GPIO_Port, LD5_Pin);
+	  osDelay(HEART_BEAT_PERIOD_MS);
   }
   /* USER CODE END heartBeatTaskWorker */
 }

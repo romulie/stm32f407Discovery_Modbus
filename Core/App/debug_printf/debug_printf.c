@@ -12,32 +12,41 @@
 #include "debug_printf.h"
 
 
+extern UART_HandleTypeDef huart2;
+
+
+
+/*
 // redefine weak __io_putchar() to send data through ....
 int __io_putchar(int ch)
 {
-	ITM_SendChar(ch); // through ITM
+	//ITM_SendChar(ch); // through ITM, only in debug mode
 
 	// or through UART
+	HAL_UART_Transmit(&UART_HANDLE, (uint8_t*)&ch, 1, 10);
 
 	return 0;
 }
+*/
 
-/*
-// redefine weak _write() to send data through ....
+// redefine weak _write() to send printf string through ....
+// TODO: add defines to select where to send string...
 int _write(int file, char *ptr, int len) {
 
-    //CDC_Transmit_FS((uint8_t*) ptr, len); // send data through USB virual COM port
+	HAL_UART_Transmit(&UART_HANDLE, (uint8_t*)ptr, len, 1000); // ... UART
 
-	// ... or through ITM
-	for(size_t i = 0; i < len; i++)
-	{
-		ITM_SendChar(*ptr);
-		ptr++;
-	}
+    //CDC_Transmit_FS((uint8_t*) ptr, len); // ... USB virual COM port
+
+	// ... or through ITM (debug mode only)
+	//for(size_t i = 0; i < len; i++)
+	//{
+	//	ITM_SendChar(*ptr);
+	//	ptr++;
+	//}
 
     return len;
 }
-*/
+
 
 //debug_printf sends a max of 256 characters to the ITM SWO trace debugger
 //It uses a _variable length argument_, same as normal printf
@@ -46,7 +55,7 @@ int _write(int file, char *ptr, int len) {
 void DebugPrintfItm(const char *fmt, ...)
 {
 
-  char buffer[DEBUGPRINTF_BUF_LEN];
+  char buffer[DEBUG_PRINTF_BUF_LEN];
   va_list args;
   va_start(args, fmt);
   vsnprintf(buffer, sizeof(buffer), fmt, args);
