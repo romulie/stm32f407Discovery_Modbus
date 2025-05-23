@@ -48,11 +48,13 @@ I2S_HandleTypeDef hi2s3;
 
 SPI_HandleTypeDef hspi1;
 
+UART_HandleTypeDef huart2;
+
 /* Definitions for defaultTask */
 osThreadId_t defaultTaskHandle;
 const osThreadAttr_t defaultTask_attributes = {
   .name = "defaultTask",
-  .stack_size = 128 * 4,
+  .stack_size = 512 * 4,
   .priority = (osPriority_t) osPriorityNormal,
 };
 /* Definitions for HeartBeatTask */
@@ -72,8 +74,9 @@ static void MX_GPIO_Init(void);
 static void MX_I2C1_Init(void);
 static void MX_I2S3_Init(void);
 static void MX_SPI1_Init(void);
-void StartDefaultTask(void *argument);
-void StartHeartBeatTask(void *argument);
+static void MX_USART2_UART_Init(void);
+void defaultTaskWorker(void *argument);
+void heartBeatTaskWorker(void *argument);
 
 /* USER CODE BEGIN PFP */
 
@@ -116,8 +119,9 @@ int main(void)
   MX_I2C1_Init();
   MX_I2S3_Init();
   MX_SPI1_Init();
+  MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
-  //MX_USB_HOST_Init();
+
   /* USER CODE END 2 */
 
   /* Init scheduler */
@@ -141,10 +145,10 @@ int main(void)
 
   /* Create the thread(s) */
   /* creation of defaultTask */
-  defaultTaskHandle = osThreadNew(StartDefaultTask, NULL, &defaultTask_attributes);
+  defaultTaskHandle = osThreadNew(defaultTaskWorker, NULL, &defaultTask_attributes);
 
   /* creation of HeartBeatTask */
-  HeartBeatTaskHandle = osThreadNew(StartHeartBeatTask, NULL, &HeartBeatTask_attributes);
+  HeartBeatTaskHandle = osThreadNew(heartBeatTaskWorker, NULL, &HeartBeatTask_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -323,6 +327,39 @@ static void MX_SPI1_Init(void)
 }
 
 /**
+  * @brief USART2 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_USART2_UART_Init(void)
+{
+
+  /* USER CODE BEGIN USART2_Init 0 */
+
+  /* USER CODE END USART2_Init 0 */
+
+  /* USER CODE BEGIN USART2_Init 1 */
+
+  /* USER CODE END USART2_Init 1 */
+  huart2.Instance = USART2;
+  huart2.Init.BaudRate = 115200;
+  huart2.Init.WordLength = UART_WORDLENGTH_8B;
+  huart2.Init.StopBits = UART_STOPBITS_1;
+  huart2.Init.Parity = UART_PARITY_NONE;
+  huart2.Init.Mode = UART_MODE_TX_RX;
+  huart2.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  huart2.Init.OverSampling = UART_OVERSAMPLING_16;
+  if (HAL_UART_Init(&huart2) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN USART2_Init 2 */
+
+  /* USER CODE END USART2_Init 2 */
+
+}
+
+/**
   * @brief GPIO Initialization Function
   * @param None
   * @retval None
@@ -422,14 +459,14 @@ static void MX_GPIO_Init(void)
 
 /* USER CODE END 4 */
 
-/* USER CODE BEGIN Header_StartDefaultTask */
+/* USER CODE BEGIN Header_defaultTaskWorker */
 /**
   * @brief  Function implementing the defaultTask thread.
   * @param  argument: Not used
   * @retval None
   */
-/* USER CODE END Header_StartDefaultTask */
-void StartDefaultTask(void *argument)
+/* USER CODE END Header_defaultTaskWorker */
+void defaultTaskWorker(void *argument)
 {
   /* init code for USB_HOST */
   MX_USB_HOST_Init();
@@ -445,28 +482,32 @@ void StartDefaultTask(void *argument)
 	  DebugPrintfItm("counter = %lu\r\n", Counter);
 	  printf("PRINTF counter = %lu\r\n", Counter);
 
+	  const uint8_t message[] = "Hello UART2!\r\n";
+	  uint16_t msgSize = strlen((char *)message);
+
+	  HAL_UART_Transmit(&huart2, message, msgSize, 100);
+
 	  osDelay(DEFAULT_TASK_PERIOD_MS);
   }
   /* USER CODE END 5 */
 }
 
-/* USER CODE BEGIN Header_StartHeartBeatTask */
+/* USER CODE BEGIN Header_heartBeatTaskWorker */
 /**
 * @brief Function implementing the HeartBeatTask thread.
 * @param argument: Not used
 * @retval None
 */
-/* USER CODE END Header_StartHeartBeatTask */
-void StartHeartBeatTask(void *argument)
+/* USER CODE END Header_heartBeatTaskWorker */
+void heartBeatTaskWorker(void *argument)
 {
-  /* USER CODE BEGIN StartHeartBeatTask */
+  /* USER CODE BEGIN heartBeatTaskWorker */
   /* Infinite loop */
   for(;;)
   {
-	HAL_GPIO_TogglePin(LD5_GPIO_Port, LD5_Pin);
-    osDelay(HEART_BEAT_PERIOD_MS);
+    osDelay(1);
   }
-  /* USER CODE END StartHeartBeatTask */
+  /* USER CODE END heartBeatTaskWorker */
 }
 
 /**

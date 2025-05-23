@@ -12,11 +12,23 @@
 #include "debug_printf.h"
 
 
-// redefine weak _write() to send data through USB virual COM port
+// redefine weak __io_putchar() to send data through ....
+int __io_putchar(int ch)
+{
+	ITM_SendChar(ch); // through ITM
+
+	// or through UART
+
+	return 0;
+}
+
+/*
+// redefine weak _write() to send data through ....
 int _write(int file, char *ptr, int len) {
 
-    //CDC_Transmit_FS((uint8_t*) ptr, len);
+    //CDC_Transmit_FS((uint8_t*) ptr, len); // send data through USB virual COM port
 
+	// ... or through ITM
 	for(size_t i = 0; i < len; i++)
 	{
 		ITM_SendChar(*ptr);
@@ -25,7 +37,7 @@ int _write(int file, char *ptr, int len) {
 
     return len;
 }
-
+*/
 
 //debug_printf sends a max of 256 characters to the ITM SWO trace debugger
 //It uses a _variable length argument_, same as normal printf
